@@ -5,22 +5,6 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   const PRODUCTION = mode === 'production';
-  const CSP = PRODUCTION ? '' : '*:5600 *:5666 *:5678 ws://*:27180';
-
-  // Sets the CSP
-  const setCsp = () => {
-    return {
-      name: 'html-transform',
-      transformIndexHtml(html) {
-        const pattern = '<%= htmlWebpackPlugin.options.templateParameters.cspDefaultSrc %>';
-        // check if the pattern exists in the html, if not, throw error
-        if (!html.includes(pattern)) {
-          throw new Error(`Could not find pattern ${pattern} in the html file`);
-        }
-        return html.replace(pattern, CSP);
-      },
-    };
-  };
 
   // Auto-injects /src/main.js into index.html on a new line after the one which has VITE_AUTOINJECT
   const autoInject = () => {
@@ -46,7 +30,6 @@ export default defineConfig(({ mode }) => {
   // Return the configuration
   return {
     plugins: [
-      setCsp(),
       autoInject(),
       vue(),
       VitePWA({
@@ -70,12 +53,10 @@ export default defineConfig(({ mode }) => {
     ],
     server: {
       port: 27180,
-      // TODO: Fix this.
-      // Breaks a bunch of style-related stuff etc.
-      // We'd need to move in the entire CSP config in here (not just the default-src) if we want to use this.
-      //headers: {
-      //  'Content-Security-Policy': PRODUCTION ? "default-src 'self'" : "default-src 'self' *:5666",
-      //},
+      headers: {
+        'Content-Security-Policy':
+          "default-src 'self' https://api.github.com; connect-src 'self' *:5600 *:5666 *:5678 ws://*:27180; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' data:; img-src 'self' data:; object-src 'none';",
+      },
     },
     publicDir: './static',
     resolve: {

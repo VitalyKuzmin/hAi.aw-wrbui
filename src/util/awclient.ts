@@ -13,7 +13,7 @@ export function createClient(force?: boolean): AWClient {
   // Works since CORS is enabled by default when running `aw-server --testing`.
   if (!production) {
     const aw_server_url = typeof AW_SERVER_URL !== 'undefined' && AW_SERVER_URL;
-    baseURL = aw_server_url || 'http://127.0.0.1:5678';
+    baseURL = aw_server_url || 'http://localhost:5678';
   }
 
   if (!_client || force) {

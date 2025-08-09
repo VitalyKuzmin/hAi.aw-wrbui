@@ -1,6 +1,7 @@
 node_modules/
 dist*/
 /modules
+/dev-dist
 
 # logs
 npm-debug.log
