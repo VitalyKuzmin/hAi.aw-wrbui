@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ mode }) => {
   const PRODUCTION = mode === 'production';
-  const CSP = PRODUCTION ? '' : '*:5600 *:5666 ws://*:27180';
+  const CSP = PRODUCTION ? '' : '*:5600 *:5666 *:5678 ws://*:27180';
 
   // Sets the CSP
   const setCsp = () => {
