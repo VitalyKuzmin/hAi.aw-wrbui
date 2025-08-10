@@ -1,10 +1,10 @@
-# aw-webui
+# hAi.aw-wrbui
 
-A web-based UI for ActivityWatch, built with Vue.js
+A web-based UI for hAi, built with Vue.js
 
-[![Build Status](https://github.com/ActivityWatch/aw-webui/workflows/Build/badge.svg)](https://github.com/ActivityWatch/aw-webui/actions)
-[![Coverage Status](https://codecov.io/gh/ActivityWatch/aw-webui/branch/master/graph/badge.svg)](https://codecov.io/gh/ActivityWatch/aw-webui)
-[![Known Vulnerabilities](https://snyk.io/test/github/ActivityWatch/aw-webui/badge.svg)](https://snyk.io/test/github/ActivityWatch/aw-webui)
+[![Build Status](https://github.com/VitalyKuzmin/hAi.aw-wrbui/workflows/Build/badge.svg)](https://github.com/VitalyKuzmin/hAi.aw-wrbui/actions)
+[![Coverage Status](https://codecov.io/gh/VitalyKuzmin/hAi.aw-wrbui/branch/main/graph/badge.svg)](https://codecov.io/gh/VitalyKuzmin/hAi.aw-wrbui)
+[![Known Vulnerabilities](https://snyk.io/test/github/VitalyKuzmin/hAi.aw-wrbui/badge.svg)](https://snyk.io/test/github/VitalyKuzmin/hAi.aw-wrbui)
 
 ## Getting started
 
@@ -46,11 +46,11 @@ npm run build
 
 ## Using a pre-release with your main install
 
-**Note:** Running a development version of aw-webui with an old aw-server can lead to issues due to version incompatibilities.
+**Note:** Running a development version of hAi.aw-wrbui with an old aw-server can lead to issues due to version incompatibilities.
 
 ### By copying the web-assets to your main install
 
-You can run a development version of aw-webui with your main version of ActivityWatch by building it (or fetching the latest build from CI) and replacing placing the contents of the `static` directory of your aw-server (or aw-server-rust) installation. For simplicity, back up the original directory for easier switching back.
+You can run a development version of hAi.aw-wrbui with your main version of ActivityWatch by building it (or fetching the latest build from CI) and replacing placing the contents of the `static` directory of your aw-server (or aw-server-rust) installation. For simplicity, back up the original directory for easier switching back.
 
 The assets are stored in the following directories (relative to your installation directory), depending on if you use aw-server-python (default) or aw-server-rust:
 
@@ -63,7 +63,7 @@ Once you've put the files in the directories, you may have to do a hard refresh 
 
 ### Using your main install's data
 
-If you want to actively iterate on `aw-webui` with your local production data (with your production server running), you'll want to use a development build, automatically update it, and connect to your production data. To do this, in `aw-webui` source directory, in one terminal window run:
+If you want to actively iterate on `hAi.aw-wrbui` with your local production data (with your production server running), you'll want to use a development build, automatically update it, and connect to your production data. To do this, in `hAi.aw-wrbui` source directory, in one terminal window run:
 
 ```bash
 AW_SERVER_URL="'http://localhost:5600'" npx vue-cli-service build --watch --dest=../aw-server/static

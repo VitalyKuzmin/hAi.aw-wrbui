@@ -26,6 +26,7 @@ const NotFound = () => import('./views/NotFound.vue');
 Vue.use(VueRouter);
 
 const router = new VueRouter({
+  base: '/watcher',
   routes: [
     {
       path: '/',

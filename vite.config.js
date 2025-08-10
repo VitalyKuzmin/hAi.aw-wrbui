@@ -29,6 +29,7 @@ export default defineConfig(({ mode }) => {
 
   // Return the configuration
   return {
+    base: '/watcher/',
     plugins: [
       autoInject(),
       vue(),
@@ -37,9 +38,9 @@ export default defineConfig(({ mode }) => {
           enabled: true,
         },
         manifest: {
-          name: 'ActivityWatch',
-          short_name: 'ActivityWatch',
-          description: 'Automatically track your computer usage',
+          name: 'hAi',
+          short_name: 'hAi',
+          description: 'A web-based UI for hAi',
           theme_color: '#ffffff',
           icons: [
             {

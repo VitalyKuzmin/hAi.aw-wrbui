@@ -1,9 +1,9 @@
 {
-  "name": "aw-webui",
+  "name": "hAi.aw-wrbui",
   "version": "1.0.0",
   "private": true,
-  "description": "A webui for ActivityWatch built in Vue.js",
-  "author": "ActivityWatch Developers",
+  "description": "A webui for hAi built in Vue.js",
+  "author": "VitalyKuzmin",
   "license": "MPL-2.0",
   "type": "module",
   "scripts": {
