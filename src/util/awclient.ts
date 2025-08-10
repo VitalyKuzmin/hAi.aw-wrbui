@@ -19,6 +19,7 @@ export function createClient(force?: boolean): AWClient {
     // We cast window to `any` to access our custom property without TypeScript errors.
     const port = (window as any).AW_CONFIG?.port || 8766; // Fallback to the default if not injected
     baseURL = `http://localhost:${port}`;
+
   }
 
   if (!_client || force) {
