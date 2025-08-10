@@ -50,7 +50,7 @@ export default {
         // Method 1: Create <link> Element
         // Create Dark Theme Element
         const themeLink = document.createElement('link');
-        themeLink.href = '/dark.css'; // darkCssUrl
+        themeLink.href = 'dark.css'; // darkCssUrl
         themeLink.rel = 'stylesheet';
         // Append Dark Theme Element
         document.querySelector('head').appendChild(themeLink);
