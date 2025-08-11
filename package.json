@@ -60,7 +60,7 @@
     "style-loader": "^3.3.3",
     "typeface-varela-round": "0.0.54",
     "uuid": "^7.0.3",
-    "vis-data": "^7.1.2",
+    "vis-data": "^8.0.0",
     "vis-timeline": "^7.5.0",
     "vis-util": "^5.0.2",
     "vite": "^6.3.1",
