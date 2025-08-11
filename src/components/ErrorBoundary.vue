@@ -23,6 +23,12 @@ export default {
       return;
     }
 
+    // Ignore specific TypeError that might be caused by null watcher names
+    if (err instanceof TypeError && err.message.includes("Cannot read properties of undefined (reading '0')")) {
+      console.warn("Ignoring known TypeError, likely due to null watcher data:", err);
+      return;
+    }
+
     // fallback
     let msg = err;
     // use server error response if available; err.isAxiosError doesn't help much here…
