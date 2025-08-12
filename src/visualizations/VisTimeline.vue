@@ -121,7 +121,7 @@ export default {
         // Filter out events shorter than 1 second (notably including 0-duration events)
         // TODO: Use flooding instead, preferably with some additional method of removing/simplifying short events for even greater performance
         if (this.filterShortEvents) {
-          events = _.filter(events, e => e.duration > 1);
+          events = _.filter(events, e => e.duration >= 0.1);
           console.log(`Filtered ${bucket.events.length - events.length} events`);
         }
         events.sort((a, b) => a.timestamp.valueOf() - b.timestamp.valueOf());
