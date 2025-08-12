@@ -17,7 +17,7 @@ export function createClient(force?: boolean): AWClient {
   } else {
     // In production, check for config injected by the Python server into index.html
     // We cast window to `any` to access our custom property without TypeScript errors.
-    const port = (window as any).AW_CONFIG?.port || 8766; // Fallback to the default if not injected
+    const port = (window as any).AW_CONFIG?.port || 5600; // Fallback to the default if not injected
     baseURL = `http://localhost:${port}`;
 
   }
