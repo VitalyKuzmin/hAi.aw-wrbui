@@ -90,6 +90,11 @@ div
                  :namefunc="e => e.data.label",
                  :colorfunc="e => e.data.label",
                  with_limit)
+    div(v-if="type == 'top_filesystem_events'")
+      aw-summary(:fields="activityStore.filesystem.top_events",
+                 :namefunc="e => e.data.event",
+                 :colorfunc="e => e.data.event",
+                 with_limit)
 </template>
 
 <style lang="scss">
@@ -129,6 +134,7 @@ function pick_subname_as_name(c) {
 
 export default {
   name: 'aw-selectable-vis',
+  components: {},
   props: {
     id: Number,
     type: String,
@@ -158,6 +164,7 @@ export default {
         'vis_timeline',
         'score',
         'top_stopwatches',
+        'top_filesystem_events',
       ],
       // TODO: Move this function somewhere else
       top_editor_files_namefunc: e => {
@@ -250,6 +257,10 @@ export default {
         top_stopwatches: {
           title: 'Top Stopwatch Events',
           available: this.activityStore.stopwatch.available,
+        },
+        top_filesystem_events: {
+          title: 'Top Filesystem Events',
+          available: this.activityStore.filesystem.available,
         },
       };
     },

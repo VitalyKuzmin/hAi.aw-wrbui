@@ -95,6 +95,12 @@ interface State {
     top_languages: IEvent[];
   };
 
+  filesystem: {
+    available: boolean;
+    duration: number;
+    top_events: IEvent[];
+  };
+
   category: {
     available: boolean;
     by_period: IEvent[];
@@ -130,6 +136,7 @@ interface State {
     browser: string[];
     android: string[];
     stopwatch: string[];
+    filesystem: string[];
   };
 }
 
@@ -159,6 +166,12 @@ export const useActivityStore = defineStore('activity', {
       top_files: [],
       top_languages: [],
       top_projects: [],
+    },
+
+    filesystem: {
+      available: false,
+      duration: 0,
+      top_events: [],
     },
 
     category: {
@@ -195,6 +208,7 @@ export const useActivityStore = defineStore('activity', {
       browser: [],
       android: [],
       stopwatch: [],
+      filesystem: [],
     },
   }),
 
@@ -297,6 +311,13 @@ export const useActivityStore = defineStore('activity', {
           await this.query_editor_completed();
         }
 
+        if (this.filesystem.available) {
+          await this.query_filesystem(query_options);
+        } else {
+          console.log('Cannot call query_filesystem as we do not have any filesystem buckets');
+          await this.query_filesystem_completed({});
+        }
+
         // Perform this last, as it takes the longest
         if (this.window.available || this.android.available) {
           await this.query_category_time_by_period(query_options);
@@ -391,6 +412,16 @@ export const useActivityStore = defineStore('activity', {
         verbose: true,
       });
       this.query_editor_completed(data[0]);
+    },
+
+    async query_filesystem({ timeperiod }) {
+      const periods = [timeperiodToStr(timeperiod)];
+      const q = queries.filesystemActivityQuery(this.buckets.filesystem);
+      const data = await getClient().query(periods, q, {
+        name: 'filesystemActivityQuery',
+        verbose: true,
+      });
+      this.query_filesystem_completed(data[0]);
     },
 
     async query_active_history({ timeperiod, ...query_options }: QueryOptions) {
@@ -564,6 +595,7 @@ export const useActivityStore = defineStore('activity', {
       this.android.available = this.buckets.android.length > 0;
       this.category.available = this.window.available || this.android.available;
       this.stopwatch.available = this.buckets.stopwatch.length > 0;
+      this.filesystem.available = this.buckets.filesystem.length > 0;
     },
 
     async get_buckets(this: State, { host }) {
@@ -575,6 +607,7 @@ export const useActivityStore = defineStore('activity', {
       this.buckets.browser = bucketsStore.bucketsBrowser(host);
       this.buckets.editor = bucketsStore.bucketsEditor(host);
       this.buckets.stopwatch = bucketsStore.bucketsStopwatch(host);
+      this.buckets.filesystem = bucketsStore.bucketsFilesystem(host);
 
       console.log('Available buckets: ', this.buckets);
       this.buckets.loaded = true;
@@ -685,6 +718,9 @@ export const useActivityStore = defineStore('activity', {
       this.editor.top_languages = null;
       this.editor.top_projects = null;
 
+      this.filesystem.top_events = null;
+      this.filesystem.duration = 0;
+
       this.category.top = null;
       this.category.by_period = null;
 
@@ -737,6 +773,11 @@ export const useActivityStore = defineStore('activity', {
       this.editor.top_files = data.files;
       this.editor.top_languages = data.languages;
       this.editor.top_projects = data.projects;
+    },
+
+    query_filesystem_completed(this: State, data = { top_events: [], duration: 0 }) {
+      this.filesystem.top_events = data.top_events;
+      this.filesystem.duration = data.duration;
     },
 
     query_active_history_completed(this: State, { active_history } = { active_history: {} }) {

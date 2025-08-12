@@ -445,6 +445,21 @@ export function editorActivityQuery(editorbuckets: string[]): string[] {
   return q;
 }
 
+export function filesystemActivityQuery(filesystembuckets: string[]): string[] {
+  let q = ['events = [];'];
+  for (const bucket of filesystembuckets) {
+    q.push(`events = concat(events, flood(query_bucket("${escape_doublequote(bucket)}")));`);
+  }
+  q = q.concat([
+    'duration = sum_durations(events);',
+    'top_events = merge_events_by_keys(events, ["event"]);',
+    'top_events = sort_by_duration(top_events);',
+    `top_events = limit_events(top_events, ${default_limit});`,
+    'RETURN = {"top_events": top_events, "duration": duration};',
+  ]);
+  return q;
+}
+
 // Returns a query that yields a single event with the duration set to
 // the sum of all non-afk time in the queried period
 // TODO: Would ideally account for `filter_afk` and `always_active_pattern`
@@ -490,4 +505,5 @@ export default {
   activityQueryAndroid,
   categoryQuery,
   editorActivityQuery,
+  filesystemActivityQuery,
 };

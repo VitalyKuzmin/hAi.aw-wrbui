@@ -52,6 +52,7 @@ export const useBucketsStore = defineStore('buckets', {
       android: boolean;
       category: boolean;
       stopwatch: boolean;
+      filesystem: boolean;
     } {
       // Returns a map of which kinds of buckets are available
       //
@@ -62,6 +63,7 @@ export const useBucketsStore = defineStore('buckets', {
         const windowAvail =
           this.bucketsWindow(hostname).length > 0 && this.bucketsAFK(hostname).length > 0;
         const androidAvail = this.bucketsAndroid(hostname).length > 0;
+        const filesystemAvail = this.bucketsFilesystem(hostname).length > 0;
 
         return {
           window: windowAvail,
@@ -70,6 +72,7 @@ export const useBucketsStore = defineStore('buckets', {
           android: androidAvail,
           category: windowAvail || androidAvail,
           stopwatch: this.bucketsStopwatch(hostname).length > 0,
+          filesystem: filesystemAvail,
         };
       };
     },
@@ -117,6 +120,19 @@ export const useBucketsStore = defineStore('buckets', {
       // fallback to a bucket with 'unknown' host, if one exists.
       // TODO: This needs a fix so we can get rid of this workaround.
       return (host: string) => this.bucketsByType(host, 'general.stopwatch', true);
+    },
+
+    bucketsFilesystem(): (host: string) => string[] {
+      return host =>
+        _.map(
+          _.filter(
+            this.buckets,
+            bucket =>
+              bucket.id.startsWith('aw-watcher-filesystem-py') &&
+              (!host || bucket.hostname === host)
+          ),
+          bucket => bucket.id
+        );
     },
 
     getBucket(this: State): (id: string) => IBucket {
