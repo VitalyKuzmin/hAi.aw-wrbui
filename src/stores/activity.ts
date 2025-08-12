@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import moment from 'moment';
 import * as _ from 'lodash';
-import { map, filter, values, groupBy, sortBy, flow, reverse } from 'lodash/fp';
+import { map, filter, values, groupBy, sortBy, flow, reverse, compact } from 'lodash/fp';
 import { IEvent } from '~/util/interfaces';
 
 import { window_events } from '~/util/fakedata';
@@ -57,6 +57,29 @@ function scoreCategories(events: IEvent[]): IEvent[] {
   });
 }
 
+function groupSumEventsBy(
+  events: IEvent[],
+  data_key: string,
+  value_func: (e: IEvent) => string
+): IEvent[] {
+  if (!events) return [];
+  return flow(
+    groupBy(value_func),
+    values,
+    map((es: any) => {
+      const val = value_func(es[0]);
+      if (val === null || val === undefined) return null;
+      return {
+        duration: _.sumBy(es, 'duration'),
+        data: { [data_key]: val },
+      };
+    }),
+    compact,
+    sortBy('duration'),
+    reverse
+  )(events);
+}
+
 export interface QueryOptions {
   host: string;
   date?: string;
@@ -99,6 +122,8 @@ interface State {
     available: boolean;
     duration: number;
     top_events: IEvent[];
+    top_folders: IEvent[];
+    events: IEvent[];
   };
 
   category: {
@@ -172,6 +197,8 @@ export const useActivityStore = defineStore('activity', {
       available: false,
       duration: 0,
       top_events: [],
+      top_folders: [],
+      events: [],
     },
 
     category: {
@@ -315,7 +342,7 @@ export const useActivityStore = defineStore('activity', {
           await this.query_filesystem(query_options);
         } else {
           console.log('Cannot call query_filesystem as we do not have any filesystem buckets');
-          await this.query_filesystem_completed({});
+          await this.query_filesystem_completed();
         }
 
         // Perform this last, as it takes the longest
@@ -719,6 +746,8 @@ export const useActivityStore = defineStore('activity', {
       this.editor.top_projects = null;
 
       this.filesystem.top_events = null;
+      this.filesystem.top_folders = null;
+      this.filesystem.events = null;
       this.filesystem.duration = 0;
 
       this.category.top = null;
@@ -775,9 +804,29 @@ export const useActivityStore = defineStore('activity', {
       this.editor.top_projects = data.projects;
     },
 
-    query_filesystem_completed(this: State, data = { top_events: [], duration: 0 }) {
+    query_filesystem_completed(
+      this: State,
+      data = { top_events: [], duration: 0, events: [] }
+    ) {
       this.filesystem.top_events = data.top_events;
       this.filesystem.duration = data.duration;
+      this.filesystem.events = data.events;
+      if (data.events && data.events.length > 0) {
+        const get_folder = e => {
+          if (!e.data.src_path) {
+            return null;
+          }
+          const path = e.data.src_path;
+          const lastSlash = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+          if (lastSlash === -1) {
+            return null;
+          }
+          return path.substring(0, lastSlash + 1);
+        };
+        this.filesystem.top_folders = groupSumEventsBy(data.events, 'folder', get_folder);
+      } else {
+        this.filesystem.top_folders = [];
+      }
     },
 
     query_active_history_completed(this: State, { active_history } = { active_history: {} }) {

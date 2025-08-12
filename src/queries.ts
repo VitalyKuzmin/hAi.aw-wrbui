@@ -455,7 +455,7 @@ export function filesystemActivityQuery(filesystembuckets: string[]): string[] {
     'top_events = merge_events_by_keys(events, ["event"]);',
     'top_events = sort_by_duration(top_events);',
     `top_events = limit_events(top_events, ${default_limit});`,
-    'RETURN = {"top_events": top_events, "duration": duration};',
+    'RETURN = {"top_events": top_events, "duration": duration, "events": events};',
   ]);
   return q;
 }

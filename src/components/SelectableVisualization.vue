@@ -95,6 +95,11 @@ div
                  :namefunc="e => e.data.event",
                  :colorfunc="e => e.data.event",
                  with_limit)
+    div(v-if="type == 'top_filesystem_folders'")
+      aw-summary(:fields="activityStore.filesystem.top_folders",
+                 :namefunc="e => e.data.folder",
+                 :colorfunc="e => e.data.folder",
+                 with_limit)
 </template>
 
 <style lang="scss">
@@ -165,6 +170,7 @@ export default {
         'score',
         'top_stopwatches',
         'top_filesystem_events',
+        'top_filesystem_folders',
       ],
       // TODO: Move this function somewhere else
       top_editor_files_namefunc: e => {
@@ -260,6 +266,10 @@ export default {
         },
         top_filesystem_events: {
           title: 'Top Filesystem Events',
+          available: this.activityStore.filesystem.available,
+        },
+        top_filesystem_folders: {
+          title: 'Top Filesystem Folders',
           available: this.activityStore.filesystem.available,
         },
       };
