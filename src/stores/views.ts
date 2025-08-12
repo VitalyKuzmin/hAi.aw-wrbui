@@ -52,6 +52,14 @@ const desktopViews: View[] = [
       { type: 'top_editor_languages', size: 3 },
     ],
   },
+  {
+    id: 'filesystem',
+    name: 'Filesystem',
+    elements: [
+      { type: 'top_filesystem_events', size: 3 },
+      { type: 'top_filesystem_folders', size: 3 },
+    ],
+  },
 ];
 
 const androidViews = [
